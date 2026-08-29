@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Dads — Player's Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f3e9cd; --parchment-dark:#e7d9ae; --ink:#2b1d10;
+    --maroon:#58180d; --maroon-dark:#3d0f07; --gold:#9c7a3c; --gold-light:#c9a45c;
+    --lead:#2e4f5e; --lead-bg:#e4eef1;
+    --friendly:#2f6b3a; --friendly-bg:#e3ede2;
+    --neutral:#7a6a2e; --neutral-bg:#f0ead9;
+    --enemy:#7a1414; --enemy-bg:#f6e2d8;
+    --sidebar-w:230px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:#3a2e22;font-family:'EB Garamond', Georgia, serif;color:var(--ink);}
+
+  .app{display:flex;min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{
+    width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+    color:var(--parchment);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .sidebar .brand{font-family:'Cinzel Decorative',serif;font-size:19px;text-align:center;margin-bottom:2px;letter-spacing:1px;}
+  .sidebar .brand-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-align:center;color:var(--gold-light);text-transform:uppercase;margin-bottom:18px;}
+  .sidebar nav a{display:block;font-family:'Cinzel',serif;font-size:12.5px;letter-spacing:0.5px;color:var(--parchment-dark);text-decoration:none;padding:8px 10px;border-radius:3px;margin-bottom:2px;text-transform:uppercase;}
+  .sidebar nav a:hover{background:rgba(255,255,255,0.08);}
+  .sidebar nav a.active{background:var(--gold-light);color:var(--maroon-dark);}
+  .sidebar .divider-line{border:none;border-top:1px solid rgba(255,255,255,0.2);margin:14px 0;}
+
+  .menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;background:var(--maroon);color:var(--parchment);border:1px solid var(--gold);border-radius:4px;padding:8px 12px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px;cursor:pointer;}
+
+  /* Main content */
+  .main{flex:1;background:var(--parchment);min-width:0;}
+  .content-wrap{max-width:700px;margin:0 auto;padding:34px 28px 70px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .view-head{border-bottom:3px solid var(--maroon);padding-bottom:10px;margin-bottom:16px;}
+  .view-head .eyebrow{font-family:'Cinzel',serif;color:var(--gold);font-size:11px;letter-spacing:3px;text-transform:uppercase;}
+  .view-head h1{font-family:'Cinzel Decorative',serif;color:var(--maroon);font-size:28px;margin:2px 0 0;}
+
+  h3.sub{font-family:'Cinzel',serif;color:var(--maroon);font-size:16px;margin:22px 0 6px;scroll-margin-top:20px;}
+  h3.sub::before{content:"◆ ";color:var(--gold);}
+  p{line-height:1.6;font-size:16px;margin:8px 0;}
+  .placeholder{color:#8a7b58;font-style:italic;font-size:14.5px;}
+  .note-to-self{color:#8a7b58;font-style:italic;font-size:13px;}
+
+  /* Glossary */
+  #view-glossary .content-wrap, .glossary-body{font-size:14px;}
+  h3.glossary-head{font-family:'Cinzel',serif;color:var(--maroon-dark);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 6px;padding:5px 0 5px 10px;background:var(--parchment-dark);border-left:3px solid var(--maroon);}
+  h3.glossary-head:first-of-type{margin-top:6px;}
+  .one-liner{margin:5px 0;font-size:14.5px;}
+  .one-liner .term{font-family:'Cinzel',serif;color:var(--maroon);font-weight:700;text-transform:lowercase;}
+
+  dl.term-list{margin:4px 0 0;columns:2;column-gap:22px;}
+  dl.term-list dt{margin-top:6px;break-inside:avoid;}
+  dl.term-list dt a{font-family:'Cinzel',serif;color:var(--maroon);font-size:13px;font-weight:700;text-transform:lowercase;text-decoration:none;border-bottom:1px dotted var(--gold);}
+  dl.term-list dt a:hover{color:var(--maroon-dark);border-bottom-style:solid;}
+  dl.term-list dd{margin:0 0 2px 0;font-size:13px;color:#5a4a2e;}
+  dl.term-list dd.placeholder{color:#a0906a;}
+
+  .rel-group{margin:8px 0 2px;}
+  .rel-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block;margin:10px 0 2px;}
+  .rel-label.friendly{color:var(--friendly);background:var(--friendly-bg);}
+  .rel-label.neutral{color:var(--neutral);background:var(--neutral-bg);}
+  .rel-label.enemy{color:var(--enemy);background:var(--enemy-bg);}
+  dl.term-list.npc-sub{columns:2;margin:2px 0 4px;}
+
+  .goal-block{background:var(--parchment-dark);border:1px solid var(--gold);border-radius:3px;padding:8px 12px;margin:6px 0;font-size:13.5px;}
+  .goal-block.full{font-size:16px;padding:14px 18px;}
+  .goal-block .who{font-family:'Cinzel',serif;color:var(--maroon);font-size:11.5px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+  .goal-block.full .who{font-size:13px;}
+
+  .lead-banner{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--lead);background:var(--lead-bg);border:1px solid var(--lead);border-radius:3px;padding:6px 10px;margin:8px 0;}
+  .lead-entry{border:1px solid var(--lead);background:var(--lead-bg);border-radius:3px;padding:8px 12px;margin:6px 0;font-size:13px;}
+  .lead-entry .lead-name{font-family:'Cinzel',serif;color:var(--lead);font-size:13px;margin-bottom:3px;}
+  .lead-entry ul{margin:2px 0;padding-left:16px;}
+  .lead-entry .example-tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6b8a97;}
+
+  .npc-full{margin:16px 0;padding-bottom:8px;border-bottom:1px solid var(--gold-light);}
+  .back-to-glossary{display:inline-block;margin-top:20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--maroon);text-decoration:none;border:1px solid var(--gold);padding:6px 12px;border-radius:3px;}
+  .back-to-glossary:hover{background:var(--parchment-dark);}
+
+  .faction-card{background:var(--parchment-dark);border:1px solid var(--gold);padding:12px 16px;border-radius:3px;margin:10px 0;scroll-margin-top:20px;}
+  .faction-card .fname{font-family:'Cinzel',serif;color:var(--maroon);font-size:15px;margin-bottom:4px;}
+
+  @media (max-width:820px){
+    .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform 0.2s ease;z-index:40;box-shadow:4px 0 20px rgba(0,0,0,0.4);}
+    .sidebar.open{transform:translateX(0);}
+    .menu-toggle{display:block;}
+    .content-wrap{padding:64px 18px 60px;}
+    dl.term-list, dl.term-list.npc-sub{columns:1;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">THE DADS</div>
+    <div class="brand-sub">Player's Companion</div>
+    <nav id="sidebarNav">
+      <a href="#" data-view="glossary" class="active">Glossary</a>
+      <hr class="divider-line">
+      <a href="#" data-view="npcs">NPCs</a>
+      <a href="#" data-view="factions">Factions</a>
+      <a href="#" data-view="artifacts">Artifacts</a>
+      <a href="#" data-view="party-goals">Party Goals</a>
+      <a href="#" data-view="personal-goals">Personal Goals</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="content-wrap">
+
+      <!-- GLOSSARY -->
+      <section class="view active" id="view-glossary">
+        <div class="view-head"><div class="eyebrow">Reference</div><h1>Glossary</h1></div>
+        <div class="glossary-body">
+
+          <h3 class="glossary-head">The World</h3>
+          <p class="note-to-self">(one-sentence summaries only)</p>
+          <p class="one-liner"><span class="term">the inner boundary</span> — <span class="placeholder">—</span></p>
+          <p class="one-liner"><span class="term">Safire</span> — <span class="placeholder">—</span></p>
+          <p class="one-liner"><span class="term">Cult of the Elitists</span> — <span class="placeholder">—</span></p>
+
+          <h3 class="glossary-head">The Inner Boundary</h3>
+          <p class="note-to-self">(one-sentence summaries only)</p>
+          <p class="one-liner"><span class="term">the bells end</span> — <span class="placeholder">—</span></p>
+          <p class="one-liner"><span class="term">Crabshack isle</span> — <span class="placeholder">—</span></p>
+          <p class="one-liner"><span class="term">southern navy stronghold</span> — <span class="placeholder">—</span></p>
+          <p class="one-liner"><span class="term">the crow's nest</span> — <span class="placeholder">—</span></p>
+
+          <h3 class="glossary-head">NPCs</h3>
+          <p class="note-to-self">(click a name to jump to their full entry)</p>
+
+          <div class="rel-group">
+            <span class="rel-label friendly">Friendly</span>
+            <dl class="term-list npc-sub">
+              <dt><a href="#" data-goto="npcs|npc-mercy">Mercy Murdersome</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-buckeye">the Buckeye family</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-jackhammer">the Jackhammer family</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-jacklyn">Jacklyn McKacklyn</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-marilda">Marilda</a></dt><dd class="placeholder">—</dd>
+            </dl>
+          </div>
+
+          <div class="rel-group">
+            <span class="rel-label neutral">Neutral</span>
+            <p class="note-to-self">(includes anyone not yet placed — sort these as you learn more)</p>
+            <dl class="term-list npc-sub">
+              <dt><a href="#" data-goto="npcs|npc-biggie">Biggie Wiggie</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-snarlywinkle">Captain Snarlywinkle</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-jeoph">Jeoph McGullywuff</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-nathan">Chef Nathan</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-king">the King</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-shipoo">Shipoo</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-pooguey">Pooguey</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-generalguy">General Guy</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-mpt">Major Plot Twist</a></dt><dd class="placeholder">—</dd>
+              <dt><a href="#" data-goto="npcs|npc-fruitman">the Fruit Man</a></dt><dd class="placeholder">—</dd>
+            </dl>
+          </div>
+
+          <div class="rel-group">
+            <span class="rel-label enemy">Enemy</span>
+            <dl class="term-list npc-sub">
+              <dt><a href="#" data-goto="npcs|npc-aric">Aric</a></dt><dd class="placeholder">—</dd>
+            </dl>
+          </div>
+
+          <h3 class="glossary-head">Factions</h3>
+          <dl class="term-list">
+            <dt><a href="#" data-goto="factions|faction-placeholder">(add faction)</a></dt><dd class="placeholder">—</dd>
+          </dl>
+
+          <h3 class="glossary-head">Artifacts</h3>
+          <dl class="term-list">
+            <dt><a href="#" data-goto="artifacts|art-amulet">Amulet of the Adulterer</a></dt><dd class="placeholder">—</dd>
+            <dt><a href="#" data-goto="artifacts|art-chainblades">General Guy's chain blades</a></dt><dd class="placeholder">—</dd>
+            <dt><a href="#" data-goto="artifacts|art-shield">Aric's shield of promise</a></dt><dd class="placeholder">—</dd>
+          </dl>
+
+          <h3 class="glossary-head">Current Party Goals</h3>
+          <p class="placeholder">—</p>
+
+          <h3 class="glossary-head">Current Personal Goals</h3>
+          <div class="goal-block"><div class="who">Biggie</div><p class="placeholder">—</p></div>
+          <div class="goal-block"><div class="who">Orin</div><p class="placeholder">—</p></div>
+          <div class="goal-block"><div class="who">Cheese n Wine</div><p class="placeholder">—</p></div>
+
+          <h3 class="glossary-head">Leads</h3>
+          <div class="lead-banner">Still being figured out — named after the thing being asked about. New lines get added underneath as the crew learns more; nothing gets rewritten, just appended.</div>
+          <div class="lead-entry">
+            <div class="lead-name">The Ghost <span class="example-tag">— example, replace with real leads</span></div>
+            <ul>
+              <li>Oh — that soulless body is the same guy as the ghost we saw earlier.</li>
+              <li><em>(later, once learned:)</em> AMULET — removes souls and preserves the body.</li>
+            </ul>
+          </div>
+
+          <h3 class="glossary-head">Other</h3>
+          <p class="placeholder">—</p>
+
+        </div>
+      </section>
+
+      <!-- NPCS -->
+      <section class="view" id="view-npcs">
+        <div class="view-head"><div class="eyebrow">Chapter I</div><h1>NPCs</h1></div>
+        <p class="placeholder">To be filled in — full write-ups for anyone in the glossary.</p>
+
+        <span class="rel-label friendly">Friendly</span>
+        <div class="npc-full" id="npc-mercy"><h3 class="sub">Mercy Murdersome</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-buckeye"><h3 class="sub">the Buckeye family</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-jackhammer"><h3 class="sub">the Jackhammer family</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-jacklyn"><h3 class="sub">Jacklyn McKacklyn</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-marilda"><h3 class="sub">Marilda</h3><p class="placeholder">—</p></div>
+
+        <span class="rel-label neutral">Neutral</span>
+        <div class="npc-full" id="npc-biggie"><h3 class="sub">Biggie Wiggie</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-snarlywinkle"><h3 class="sub">Captain Snarlywinkle</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-jeoph"><h3 class="sub">Jeoph McGullywuff</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-nathan"><h3 class="sub">Chef Nathan</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-king"><h3 class="sub">the King</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-shipoo"><h3 class="sub">Shipoo</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-pooguey"><h3 class="sub">Pooguey</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-generalguy"><h3 class="sub">General Guy</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-mpt"><h3 class="sub">Major Plot Twist</h3><p class="placeholder">—</p></div>
+        <div class="npc-full" id="npc-fruitman"><h3 class="sub">the Fruit Man</h3><p class="placeholder">—</p></div>
+
+        <span class="rel-label enemy">Enemy</span>
+        <div class="npc-full" id="npc-aric"><h3 class="sub">Aric</h3><p class="placeholder">—</p></div>
+
+        <a href="#" class="back-to-glossary" data-view="glossary">← Back to Glossary</a>
+      </section>
+
+      <!-- FACTIONS -->
+      <section class="view" id="view-factions">
+        <div class="view-head"><div class="eyebrow">Chapter II</div><h1>Factions</h1></div>
+        <p class="placeholder">To be filled in — the groups the crew has encountered and what they seem to want.</p>
+        <div class="faction-card" id="faction-placeholder"><div class="fname">—</div><p class="placeholder">—</p></div>
+        <a href="#" class="back-to-glossary" data-view="glossary">← Back to Glossary</a>
+      </section>
+
+      <!-- ARTIFACTS -->
+      <section class="view" id="view-artifacts">
+        <div class="view-head"><div class="eyebrow">Chapter III</div><h1>Artifacts</h1></div>
+        <p class="placeholder">To be filled in.</p>
+        <div id="art-amulet"><h3 class="sub">Amulet of the Adulterer</h3><p class="placeholder">—</p></div>
+        <div id="art-chainblades"><h3 class="sub">General Guy's chain blades</h3><p class="placeholder">—</p></div>
+        <div id="art-shield"><h3 class="sub">Aric's shield of promise</h3><p class="placeholder">—</p></div>
+        <a href="#" class="back-to-glossary" data-view="glossary">← Back to Glossary</a>
+      </section>
+
+      <!-- PARTY GOALS -->
+      <section class="view" id="view-party-goals">
+        <div class="view-head"><div class="eyebrow">Chapter IV</div><h1>Current Party Goals</h1></div>
+        <p class="placeholder">To be filled in.</p>
+        <a href="#" class="back-to-glossary" data-view="glossary">← Back to Glossary</a>
+      </section>
+
+      <!-- PERSONAL GOALS -->
+      <section class="view" id="view-personal-goals">
+        <div class="view-head"><div class="eyebrow">Chapter V</div><h1>Current Personal Goals</h1></div>
+        <p class="placeholder">To be filled in.</p>
+        <div class="goal-block full"><div class="who">Biggie</div><p class="placeholder">—</p></div>
+        <div class="goal-block full"><div class="who">Orin</div><p class="placeholder">—</p></div>
+        <div class="goal-block full"><div class="who">Cheese n Wine</div><p class="placeholder">—</p></div>
+        <a href="#" class="back-to-glossary" data-view="glossary">← Back to Glossary</a>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+function showView(viewId){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + viewId);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('#sidebarNav a').forEach(a => a.classList.remove('active'));
+  const navLink = document.querySelector('#sidebarNav a[data-view="' + viewId + '"]');
+  if(navLink) navLink.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+document.querySelectorAll('#sidebarNav a[data-view]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); showView(a.dataset.view); });
+});
+document.querySelectorAll('.back-to-glossary[data-view]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); showView(a.dataset.view); });
+});
+document.querySelectorAll('a[data-goto]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const [viewId, anchorId] = a.dataset.goto.split('|');
+    showView(viewId);
+    setTimeout(() => {
+      const el = document.getElementById(anchorId);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 50);
+  });
+});
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+</script>
+</body>
+</html>
