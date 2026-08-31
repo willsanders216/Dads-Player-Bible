@@ -96,7 +96,7 @@
   .one-liner{margin:5px 0;font-size:16px;}
   .one-liner .term{font-family:'Cinzel',serif;color:var(--maroon);font-weight:700;text-transform:lowercase;}
 
-  dl.term-list{margin:4px 0 0;columns:1;}
+  dl.term-list{margin:4px 0 0;columns:2;column-gap:22px;}
   dl.term-list dt{margin-top:12px;break-inside:avoid;}
   dl.term-list dt a{font-family:'Cinzel',serif;color:var(--maroon);font-size:15px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;border-bottom:1px dotted var(--gold-light);}
   dl.term-list dt a:hover{color:var(--maroon-dark);border-bottom-style:solid;}
@@ -207,7 +207,7 @@
   .lead-entry .example-tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6b8a97;}
 
   .npc-full{background:var(--parchment-dark);border:1px solid var(--gold);border-radius:3px;padding:12px 16px;margin:12px 0;}
-  .npc-full.compact{background:none;border:none;padding:9px 0;}
+  .npc-full.compact{padding:9px 12px;}
   .npc-full.compact p{font-size:14px;margin:4px 0;}
 
   .glossary-head-link{margin:20px 0 6px;}
@@ -226,7 +226,18 @@
     .menu-toggle{display:block;}
     .content-wrap{padding:64px 18px 60px;}
     dl.term-list, dl.term-list.npc-sub{columns:1;}
-  }
+  }  /* Secret Knowledge — per-character password gate, re-locks on every page refresh */
+  .secret-lock{background:#f6e2d8;border:2px solid #7a1414;border-radius:4px;padding:12px 16px;margin:14px 0;}
+  .secret-lock-head{font-family:'Cinzel',serif;color:#7a1414;font-size:12.5px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+  .secret-lock-gate{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .secret-pw-input{font-family:'EB Garamond',serif;font-size:14px;padding:7px 10px;border:1px solid #7a1414;border-radius:3px;background:var(--parchment);color:var(--ink);flex:1;min-width:140px;}
+  .secret-pw-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;background:#7a1414;color:var(--parchment);border:none;border-radius:3px;padding:8px 14px;cursor:pointer;}
+  .secret-pw-btn:hover{background:#5c0e0e;}
+  .secret-pw-error{width:100%;font-size:12.5px;color:#7a1414;font-style:italic;display:none;margin-top:2px;}
+  .secret-pw-error.show{display:block;}
+  .secret-content{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #7a1414;}
+  .secret-content.unlocked{display:block;}
+  .secret-content p{margin:4px 0;font-size:15.5px;}
 </style>
 </head>
 <body>
@@ -473,7 +484,7 @@
         <div class="hub-grid">
           <a href="#" class="hub-card" data-view="billy"><div class="hc-name">Billy Buckeye</div><div class="hc-sub">Paladin 5 — party captain</div></a>
           <a href="#" class="hub-card" data-view="orin"><div class="hc-name">Orin the Jackhammer</div><div class="hc-sub">Ranger 5</div></a>
-          <a href="#" class="hub-card" data-view="cheesenwine"><div class="hc-name">Cheese n Wine</div><div class="hc-sub">Sorcerer 4 — split personality</div></a>
+          <a href="#" class="hub-card" data-view="cheesenwine"><div class="hc-name">Cheese n Wine</div><div class="hc-sub">Sorcerer 4</div></a>
         </div>
         <a href="#" class="back-to-glossary" data-view="glossary">← Back</a>
       </section>
@@ -484,7 +495,6 @@
           <div class="info-block">
             <div class="info-name">Who They Are</div>
             <ul class="placeholder-list">
-              <li>Split personality — Cheese is tricky and cheeky; Wine is disgusted with the world and more chaotic.</li>
               <li>Woke up lost on a boat and met the other two — how they got there is still unclear, even to them.</li>
               <li>Wine hasn't been seen since the stronghold heist.</li>
             </ul>
@@ -509,6 +519,31 @@
           <div class="info-block">
             <div class="info-name">Personal Goals</div>
             <p class="placeholder">—</p>
+          </div>
+
+          <div class="secret-lock" data-secret-id="cheesenwine">
+            <div class="secret-lock-head">🔒 Secret Knowledge — Cheese n Wine's player only</div>
+            <div class="secret-lock-gate">
+              <input type="password" class="secret-pw-input" placeholder="Enter password" autocomplete="off">
+              <button class="secret-pw-btn">Unlock</button>
+              <div class="secret-pw-error">Wrong password.</div>
+            </div>
+            <div class="secret-content">
+              <p>General knowledge any Inner Boundary local would have:</p>
+              <ul class="placeholder-list">
+                <li><strong>Aric</strong> — Head of the Navy. The Navy is the governing authority across the whole Inner Boundary, not just one region.</li>
+                <li><strong>The Crow's Nest</strong> — the capital. Seat of the King, and where the Navy is based.</li>
+                <li>The Kraken is rumored to exist — no one's ever been proven to have lived to tell the tale of seeing one.</li>
+                <li>Plums don't exist here — closest thing is a sour little fruit called a "duskberry."</li>
+                <li>Piracy is outlawed by the Navy — common knowledge, not a secret or rumor.</li>
+                <li>Broccoli is just called "trees" by pretty much everyone, kids included.</li>
+                <li>Sea witches once held real authority over magic use — including wiping out teleportation magic entirely — but haven't held any power themselves since the pirate faction enslaved them.</li>
+                <li>Michael Cera is a famous theatre playwright — most taverns have at least one of his plays half-memorized by the regulars.</li>
+                <li>The sky is commonly called "the ceiling" or "the roof" — no one's ever made it far enough up to prove otherwise.</li>
+                <li>Rumor going around: an old conman — the same one who once lured in some of the Inner Boundary's most influential figures, before disappearing off the face of the earth — is now trying to lure pirates into some kind of trap.</li>
+                <li>Others believe that same conman actually found a promised land, and is trying to bring other pirates there to join him.</li>
+              </ul>
+            </div>
           </div>
         </div>
         <a href="#" class="back-to-glossary" data-view="players">← Back</a>
@@ -783,6 +818,18 @@
             <div class="info-name">Personal Goals</div>
             <p class="placeholder">—</p>
           </div>
+
+          <div class="secret-lock" data-secret-id="billy">
+            <div class="secret-lock-head">🔒 Secret Knowledge — Billy's player only</div>
+            <div class="secret-lock-gate">
+              <input type="password" class="secret-pw-input" placeholder="Enter password" autocomplete="off">
+              <button class="secret-pw-btn">Unlock</button>
+              <div class="secret-pw-error">Wrong password.</div>
+            </div>
+            <div class="secret-content">
+              <p class="placeholder">Does my wife hate me?</p>
+            </div>
+          </div>
         </div>
         <a href="#" class="back-to-glossary" data-goto="npcs|npc-buckeye">← Back</a>
       </section>
@@ -860,6 +907,18 @@
           <div class="info-block">
             <div class="info-name">Personal Goals</div>
             <p class="placeholder">—</p>
+          </div>
+
+          <div class="secret-lock" data-secret-id="orin">
+            <div class="secret-lock-head">🔒 Secret Knowledge — Orin's player only</div>
+            <div class="secret-lock-gate">
+              <input type="password" class="secret-pw-input" placeholder="Enter password" autocomplete="off">
+              <button class="secret-pw-btn">Unlock</button>
+              <div class="secret-pw-error">Wrong password.</div>
+            </div>
+            <div class="secret-content">
+              <p class="placeholder">I miss my mum.</p>
+            </div>
           </div>
         </div>
         <a href="#" class="back-to-glossary" data-goto="npcs|npc-jackhammer">← Back</a>
@@ -1262,6 +1321,9 @@
 </div>
 
 <script>
+let currentView = 'glossary';
+let viewHistory = [];
+
 function showCalMonth(month, btn){
   document.querySelectorAll('.calendar-month').forEach(m => m.classList.remove('active'));
   document.getElementById('cal-' + month).classList.add('active');
@@ -1269,7 +1331,11 @@ function showCalMonth(month, btn){
   btn.classList.add('active');
 }
 
-function showView(viewId){
+function showView(viewId, isBack){
+  if(!isBack && currentView && currentView !== viewId){
+    viewHistory.push(currentView);
+  }
+  currentView = viewId;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + viewId);
   if(target) target.classList.add('active');
@@ -1278,6 +1344,12 @@ function showView(viewId){
   if(navLink) navLink.classList.add('active');
   document.getElementById('sidebar').classList.remove('open');
   window.scrollTo(0,0);
+}
+
+function goBack(){
+  if(!viewHistory.length){ showView('glossary', true); return; }
+  const prev = viewHistory.pop();
+  showView(prev, true);
 }
 
 function goTo(view, anchorId){
@@ -1293,6 +1365,13 @@ function goTo(view, anchorId){
 // Single delegated click handler — works for content present now AND anything
 // added later (search results, auto-backlinks) without needing new listeners.
 document.addEventListener('click', e => {
+  // Back buttons always use real navigation history, not a hardcoded target
+  const backEl = e.target.closest('.back-to-glossary');
+  if(backEl){
+    e.preventDefault();
+    goBack();
+    return;
+  }
   const gotoEl = e.target.closest('[data-goto]');
   if(gotoEl){
     e.preventDefault();
@@ -1381,6 +1460,34 @@ document.addEventListener('click', e => {
   if(!e.target.closest('.search-wrap')){
     document.getElementById('searchResults').classList.remove('open');
   }
+});
+
+// Secret Knowledge password gates — case-insensitive, always re-locked on page load/refresh
+// Note: this is client-side only, meant to stop a casual glance at the table, not real security.
+const SECRET_PASSWORDS = {
+  billy: 'bigtrout',
+  orin: 'persephoneisbae',
+  cheesenwine: 'brieandmerlot'
+};
+document.querySelectorAll('.secret-lock').forEach(lock => {
+  const id = lock.dataset.secretId;
+  const input = lock.querySelector('.secret-pw-input');
+  const btn = lock.querySelector('.secret-pw-btn');
+  const err = lock.querySelector('.secret-pw-error');
+  const content = lock.querySelector('.secret-content');
+  const gate = lock.querySelector('.secret-lock-gate');
+  function tryUnlock(){
+    const val = (input.value || '').trim().toLowerCase();
+    if(val && SECRET_PASSWORDS[id] && val === SECRET_PASSWORDS[id]){
+      content.classList.add('unlocked');
+      gate.style.display = 'none';
+      err.classList.remove('show');
+    } else {
+      err.classList.add('show');
+    }
+  }
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(); });
 });
 
 buildIndex();
